@@ -10,7 +10,7 @@ def init_browser():
 
 mars_dictionnary = {}
 
-def scrape():
+def scrape_mars():
 	# Initialize browser
 	browser = init_browser()
 

@@ -11,16 +11,19 @@ mongo = PyMongo(app)
 
 @app.route("/")
 def home():
-	mars = mongo.db.mars.find_one()
-	return render_template("index.html", mars=mars)
+	mars = mongo.db.mars.find_one({"active": 1})
+	return render_template("index.html", mars = mars)
 
 @app.route("/scrape")
 def scrape():
 	# Run scraped function
 	mars_app = mongo.db.mars
-	mars_data = scrape_mars.scrape()
+	mars = scrape_mars.scrape_mars()
 
-	mars_app.update({}, mars_data, upsert=True)
+	mars_app.update_many({'active': 1}, {'$set': {'active': 0}})
+
+	mars_app.insert_one(mars)
+
 	return redirect("/")
 
 if __name__ == "__main__":
